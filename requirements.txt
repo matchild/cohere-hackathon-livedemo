@@ -1,0 +1,4 @@
+## python==3.10
+python-dotenv==1.0.1
+cohere==4.45
+langchain==0.1.5
