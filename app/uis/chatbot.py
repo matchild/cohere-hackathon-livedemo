@@ -1,5 +1,7 @@
 import streamlit as st
 
+from app.push.agent import run
+
 
 def ui() -> None:
     st.title("Chatbot 🤖")
@@ -9,19 +11,19 @@ def ui() -> None:
         st.session_state["messages"] = []
 
     for message in st.session_state["messages"]:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        with st.chat_message(message[0]):
+            st.markdown(message[1])
 
     user_query = st.chat_input("Ask something...")
     if user_query:
         st.chat_message("user").markdown(user_query)
 
         with st.spinner("Thinking..."):
-            ai_answer = user_query  # mirror bot
+            ai_answer = run(
+                user_query,
+                chat_conversation=st.session_state["messages"],
+            )
 
         st.chat_message("assistant").markdown(ai_answer)
 
-        st.session_state["messages"] += [
-            {"role": "user", "content": user_query},
-            {"role": "assistant", "content": ai_answer},
-        ]
+        st.session_state["messages"] += [("human", user_query), ("ai", ai_answer)]
