@@ -3,13 +3,17 @@ import datetime
 from pydantic import BaseModel
 
 
-# Dataframe
-class Dataframe(BaseModel):
+# Value
+class ValueLone(BaseModel):
     name: str
     description: str
 
 
-class DataframeInDB(Dataframe):
+class Value(ValueLone):
+    variable_id: int
+
+
+class ValueInDB(Value):
     id: int
     registered_at: datetime.datetime
 
@@ -18,11 +22,18 @@ class DataframeInDB(Dataframe):
 
 
 # Variable
-class Variable(BaseModel):
-    dataframe_id: int
+class VariableLone(BaseModel):
     name: str
     description: str
     is_categorical: bool
+
+
+class Variable(VariableLone):
+    dataframe_id: int
+
+
+class VariableFull(VariableLone):
+    values: list[ValueLone]
 
 
 class VariableInDB(Variable):
@@ -33,14 +44,17 @@ class VariableInDB(Variable):
         from_attributes = True
 
 
-# Value
-class Value(BaseModel):
-    variable_id: int
+# Dataframe
+class Dataframe(BaseModel):
     name: str
     description: str
 
 
-class ValueInDB(Variable):
+class DataframeFull(Dataframe):
+    variables: list[VariableFull]
+
+
+class DataframeInDB(Dataframe):
     id: int
     registered_at: datetime.datetime
 
