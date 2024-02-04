@@ -13,9 +13,30 @@ def get_vectorstore() -> Chroma:
     )
 
 
-# add document test
-# from langchain_core.documents import Document
+# Test
+from langchain_core.documents import Document
 
-# test_doc = Document(page_content="This is a test document.")
-# vectorstore = get_vectorstore()
-# res = vectorstore.add_documents([test_doc])
+# CONTRACTS dataframe
+test_doc_dataframe1 = Document(page_content="This table contains all the information related to the active contracts the company has with its customers",
+                           metadata={"type": "dataframe",
+                                     "dataframe_id": 1})
+# CONTRACTS variables
+test_doc_variables1 = Document(page_content="Type of contract defining the commodity, market segment and branch of the company who issued the contract",
+                               metadata={"type": "variable" ,
+                                         "table_id": 1,
+                                         "variable_id": 2})
+# CUSTOMERS dataframe
+test_doc_dataframe2 = Document(page_content="This table contains all the information related to the customers",
+                           metadata={"type": "dataframe",
+                                     "dataframe_id": 2})
+
+
+vectorstore = get_vectorstore()
+res = vectorstore.add_documents([test_doc_dataframe1, test_doc_variables1, test_doc_dataframe2])
+
+
+vectorstore.similarity_search_with_score(
+    query="data about clients",
+    k=1,
+    filter={"type": "dataframe"},
+)
