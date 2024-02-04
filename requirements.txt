@@ -1,5 +1,6 @@
 ## python==3.10
 python-dotenv==1.0.1
 cohere==4.45
+chromadb==0.4.22
 langchain==0.1.5
 streamlit==1.31.0
