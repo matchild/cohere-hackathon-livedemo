@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -10,6 +11,7 @@ class DataframeORM(Base):
     __tablename__ = "dataframes"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    vectorstore_id: Mapped[Optional[str]]
     name: Mapped[str]
     description: Mapped[str]
     registered_at: Mapped[datetime.datetime]
@@ -24,6 +26,7 @@ class VariableORM(Base):
     __tablename__ = "variables"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    vectorstore_id: Mapped[Optional[str]]
     dataframe_id: Mapped[int] = mapped_column(ForeignKey("dataframes.id"))
     name: Mapped[str]
     description: Mapped[str]
@@ -41,6 +44,7 @@ class ValueORM(Base):
     __tablename__ = "values"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    vectorstore_id: Mapped[Optional[str]]
     variable_id: Mapped[int] = mapped_column(ForeignKey("variables.id"))
     name: Mapped[str]
     description: Mapped[str]

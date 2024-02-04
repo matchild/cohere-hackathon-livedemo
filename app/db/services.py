@@ -1,9 +1,11 @@
 import datetime
+import logging
 
 from sqlalchemy.orm import Session
 
 from app.db.models import DataframeORM, ValueORM, VariableORM
 from app.db.schemas import Dataframe, DataframeFull, Value, Variable
+from app.db.vectorstore import add_to_vectorstore
 
 
 # DataframeORM
@@ -19,6 +21,12 @@ def register_dataframe(db: Session, object_in: Dataframe) -> DataframeORM:
     db.add(db_object)
     db.commit()
     db.refresh(db_object)
+
+    logging.info(f"Adding dataframe with id={db_object.id} to vectorstore...")
+    vectorstore_id = add_to_vectorstore(db_object)
+    db_object.vectorstore_id = vectorstore_id
+    db.commit()
+
     return db_object
 
 
@@ -35,6 +43,12 @@ def register_variable(db: Session, object_in: Variable) -> VariableORM:
     db.add(db_object)
     db.commit()
     db.refresh(db_object)
+
+    logging.info(f"Adding variable with id={db_object.id} to vectorstore...")
+    vectorstore_id = add_to_vectorstore(db_object)
+    db_object.vectorstore_id = vectorstore_id
+    db.commit()
+
     return db_object
 
 
@@ -51,6 +65,12 @@ def register_value(db: Session, object_in: Value) -> ValueORM:
     db.add(db_object)
     db.commit()
     db.refresh(db_object)
+
+    logging.info(f"Adding value with id={db_object.id} to vectorstore...")
+    vectorstore_id = add_to_vectorstore(db_object)
+    db_object.vectorstore_id = vectorstore_id
+    db.commit()
+
     return db_object
 
 

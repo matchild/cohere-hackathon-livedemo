@@ -15,6 +15,7 @@ class Value(ValueLone):
 
 class ValueInDB(Value):
     id: int
+    vectorstore_id: str
     registered_at: datetime.datetime
 
     class Config:
@@ -38,6 +39,7 @@ class VariableFull(VariableLone):
 
 class VariableInDB(Variable):
     id: int
+    vectorstore_id: str
     registered_at: datetime.datetime
 
     class Config:
@@ -56,6 +58,7 @@ class DataframeFull(Dataframe):
 
 class DataframeInDB(Dataframe):
     id: int
+    vectorstore_id: str
     registered_at: datetime.datetime
 
     class Config:
