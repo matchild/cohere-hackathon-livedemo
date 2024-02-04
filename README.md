@@ -5,6 +5,5 @@
 * Copy the `.env-example` file into `.env` file and insert your secret keys [never push them on origin]
 
 ## How do I get it running?
-* Create a folder "data": `mkdir data`
 * Create a mock database: `python -m scripts.create_mock_db`
 * Run the UI: `streamlit run main_ui.py`
