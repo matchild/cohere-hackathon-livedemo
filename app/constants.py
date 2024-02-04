@@ -13,5 +13,5 @@ COHERE_EMBEDDING_MODEL = "embed-english-light-v3.0"
 DATA_FOLDER = "./data"
 if not os.path.exists(DATA_FOLDER):
     os.makedirs(DATA_FOLDER)
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATA_FOLDER}/test.db"
+SQL_DATABASE_URL = f"sqlite:///{DATA_FOLDER}/test.db"
 CHROMA_FOLDER = f"{DATA_FOLDER}/chroma_db"

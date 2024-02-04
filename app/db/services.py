@@ -8,6 +8,13 @@ from app.db.schemas import Dataframe, DataframeFull, Value, Variable
 from app.db.vectorstore import add_to_vectorstore
 
 
+# Generic ORM
+def get_object_by_id(
+    db: Session, orm: type[DataframeORM | VariableORM | ValueORM], id: int
+) -> DataframeORM | VariableORM | ValueORM | None:
+    return db.query(orm).filter_by(id=id).first()
+
+
 # DataframeORM
 def get_dataframe_by_id(db: Session, id: int) -> DataframeORM | None:
     return db.query(DataframeORM).filter_by(id=id).first()
