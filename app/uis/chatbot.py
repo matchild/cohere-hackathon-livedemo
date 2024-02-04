@@ -15,8 +15,8 @@ def ui() -> None:
         )
 
     for message in st.session_state["messages"]:
-        with st.chat_message(message[0]):
-            st.markdown(message[1])
+        with st.chat_message(message["role"]):
+            st.markdown(message["message"])
 
     user_query = st.chat_input("Ask something...")
     if user_query:
@@ -26,10 +26,12 @@ def ui() -> None:
             with st.session_state["conn"].session as db_session:
                 agent = PushAgent(db=db_session)
                 ai_answer = agent.run(
-                    user_query,
-                    chat_conversation=st.session_state["messages"],
+                    user_query, chat_history=st.session_state["messages"]
                 )
 
         st.chat_message("assistant").markdown(ai_answer)
 
-        st.session_state["messages"] += [("human", user_query), ("ai", ai_answer)]
+        st.session_state["messages"] += [
+            {"role": "human", "message": user_query},
+            {"role": "ai", "message": ai_answer},
+        ]
