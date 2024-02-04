@@ -2,6 +2,7 @@
 * Create a virtual environment: `conda create -n env00 python=3.10`
 * Activate the created environment: `activate env00`
 * Install the dependencies: `pip install -r requirements.txt`
+* Copy the `.env-example` file into `.env` file and insert your secret keys [never push them on origin]
 
 ## How do I get it running?
 * Create a mock database: `python -m scripts.create_mock_db`
