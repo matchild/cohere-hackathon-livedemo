@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.constants import COHERE_API_KEY
 from app.db.models import DataframeORM, ValueORM, VariableORM
-from app.db.services import get_object_by_id
+from app.db.services import get_dataframe_by_id, get_value_by_id, get_variable_by_id
 from app.db.vectorstore import get_vectorstore
 
 
@@ -19,29 +19,56 @@ class PushAgent:
         self.db = db
         self.vectorstore = get_vectorstore()
 
+    def _db_object_to_doc(self, orm_type: str, object_id: int) -> dict[str, str]:
+        if orm_type == DataframeORM.__name__:
+            db_dataframe = get_dataframe_by_id(db=self.db, id=object_id)
+            return {
+                "dataframe_name": db_dataframe.name,
+                "dataframe_description": db_dataframe.description,
+            }
+
+        elif orm_type == VariableORM.__name__:
+            db_variable = get_variable_by_id(db=self.db, id=object_id)
+            return {
+                "dataframe_name": db_variable.dataframe.name,
+                "dataframe_description": db_variable.dataframe.description,
+                "variable_name": db_variable.name,
+                "variable_description": db_variable.description,
+            }
+
+        elif orm_type == ValueORM.__name__:
+            db_value = get_value_by_id(db=self.db, id=object_id)
+            return {
+                "dataframe_name": db_value.variable.dataframe.name,
+                "dataframe_description": db_value.variable.dataframe.description,
+                "variable_name": db_value.variable.name,
+                "variable_description": db_value.variable.description,
+                "value_name": db_value.name,
+                "value_description": db_value.description,
+            }
+
+        else:
+            raise Exception(f"ORM type not accepted: {orm_type}")
+
     def _retrieve_docs(self, search_queries: list[str]) -> list[dict[str, str]]:
         """Get the relevant documents through a similarity search in the vectorstore"""
         retrieved_docs = []
+        used_object_ids = {n: [] for n in self._available_orms.keys()}
         for search_query in search_queries:
             logging.info(f"Performing vector search with query: {search_query}")
             search_docs = self.vectorstore.similarity_search(
                 search_query["text"], k=self._NUM_SEARCHED_DOCS
             )
+
             for doc in search_docs:
                 orm_type = doc.metadata["type"]
-                db_obj = get_object_by_id(
-                    db=self.db,
-                    orm=self._available_orms[orm_type],
-                    id=doc.metadata["id"],
-                )
-
-                retrieved_docs.append(
-                    {
-                        "type": orm_type[:-3],
-                        "name": db_obj.name,
-                        "description": db_obj.description,
-                    }
-                )
+                id = doc.metadata["id"]
+                if id not in used_object_ids[orm_type]:
+                    rendered_doc = self._db_object_to_doc(
+                        orm_type=orm_type, object_id=id
+                    )
+                    used_object_ids[orm_type].append(id)
+                    retrieved_docs.append(rendered_doc)
 
         return retrieved_docs
 
