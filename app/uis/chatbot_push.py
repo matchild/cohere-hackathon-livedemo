@@ -4,8 +4,8 @@ from app.agents.push import AiAgent
 from app.constants import SQL_DATABASE_URL
 
 
-def ui() -> None:
-    st.title("Chatbot 🤖")
+def chat_ui_push() -> None:
+    st.title("Push Chatbot 🤖")
 
     if "init_chatbot" not in st.session_state:
         st.session_state["init_chatbot"] = True
