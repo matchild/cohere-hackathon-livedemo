@@ -1,7 +1,7 @@
 import streamlit as st
 
+from app.agents.push import AiAgent
 from app.constants import SQL_DATABASE_URL
-from app.push.agent import PushAgent
 
 
 def ui() -> None:
@@ -24,7 +24,7 @@ def ui() -> None:
 
         with st.spinner("Thinking..."):
             with st.session_state["conn"].session as db_session:
-                agent = PushAgent(db=db_session)
+                agent = AiAgent(db=db_session)
                 ai_answer = agent.run(
                     user_query, chat_history=st.session_state["messages"]
                 )

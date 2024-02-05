@@ -9,7 +9,7 @@ from app.db.services import get_dataframe_by_id, get_value_by_id, get_variable_b
 from app.db.vectorstore import get_vectorstore
 
 
-class PushAgent:
+class AiAgent:
     _NUM_SEARCHED_DOCS = 3
     _available_orms = {
         orm.__name__: orm for orm in [DataframeORM, VariableORM, ValueORM]
