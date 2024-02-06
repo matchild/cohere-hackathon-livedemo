@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.db.models import DataframeORM, ValueORM, VariableORM
 from app.db.schemas import Dataframe, DataframeFull, Value, Variable
-from app.db.vectorstore import add_to_vectorstore
+from app.db.vectorstore import orm_to_vectorstore
 
 
 # Generic ORM
@@ -30,7 +30,7 @@ def register_dataframe(db: Session, object_in: Dataframe) -> DataframeORM:
     db.refresh(db_object)
 
     logging.info(f"Adding dataframe with id={db_object.id} to vectorstore...")
-    vectorstore_id = add_to_vectorstore(db_object)
+    vectorstore_id = orm_to_vectorstore(db_object)
     db_object.vectorstore_id = vectorstore_id
     db.commit()
 
@@ -52,7 +52,7 @@ def register_variable(db: Session, object_in: Variable) -> VariableORM:
     db.refresh(db_object)
 
     logging.info(f"Adding variable with id={db_object.id} to vectorstore...")
-    vectorstore_id = add_to_vectorstore(db_object)
+    vectorstore_id = orm_to_vectorstore(db_object)
     db_object.vectorstore_id = vectorstore_id
     db.commit()
 
@@ -74,7 +74,7 @@ def register_value(db: Session, object_in: Value) -> ValueORM:
     db.refresh(db_object)
 
     logging.info(f"Adding value with id={db_object.id} to vectorstore...")
-    vectorstore_id = add_to_vectorstore(db_object)
+    vectorstore_id = orm_to_vectorstore(db_object)
     db_object.vectorstore_id = vectorstore_id
     db.commit()
 
