@@ -7,3 +7,4 @@ streamlit==1.31.0
 SQLAlchemy~=2.0.25
 pydantic~=2.6.0
 pypdf~=4.0.1
+pandas~=2.2.0

@@ -39,8 +39,8 @@ class AiAgent:
         elif orm_type == ValueORM.__name__:
             db_value = get_value_by_id(db=self.db, id=object_id)
             return {
-                "dataframe_name": db_value.variable.dataframe.name,
-                "dataframe_description": db_value.variable.dataframe.description,
+                "dataframe_name": db_value.variable.dataframe.db_name,
+                "dataframe_description": db_value.variable.dataframe.db_description,
                 "variable_name": db_value.variable.name,
                 "variable_description": db_value.variable.description,
                 "value_name": db_value.name,
