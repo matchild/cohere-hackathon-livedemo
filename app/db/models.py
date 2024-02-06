@@ -54,3 +54,17 @@ class ValueORM(Base):
 
     def __repr__(self) -> str:
         return f"ValueORM(id={self.id!r}, name={self.name!r})"
+
+
+class UnstructuredORM(Base):
+    __tablename__ = "unstructured"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    vectorstore_id: Mapped[Optional[str]]
+    name: Mapped[str]
+    description: Mapped[str]
+    content: Mapped[str]
+    registered_at: Mapped[datetime.datetime]
+
+    def __repr__(self) -> str:
+        return f"UnstructuredORM(id={self.id!r}, name={self.name!r})"

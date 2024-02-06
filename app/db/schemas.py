@@ -63,3 +63,19 @@ class DataframeInDB(Dataframe):
 
     class Config:
         from_attributes = True
+
+
+# Unstructured
+class Unstructured(BaseModel):
+    name: str
+    description: str
+    content: str
+
+
+class UnstructuredInDB(Unstructured):
+    id: int
+    vectorstore_id: str
+    registered_at: datetime.datetime
+
+    class Config:
+        from_attributes = True

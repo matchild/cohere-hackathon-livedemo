@@ -3,16 +3,9 @@ import logging
 
 from sqlalchemy.orm import Session
 
-from app.db.models import DataframeORM, ValueORM, VariableORM
-from app.db.schemas import Dataframe, DataframeFull, Value, Variable
-from app.db.vectorstore import orm_to_vectorstore
-
-
-# Generic ORM
-def get_object_by_id(
-    db: Session, orm: type[DataframeORM | VariableORM | ValueORM], id: int
-) -> DataframeORM | VariableORM | ValueORM | None:
-    return db.query(orm).filter_by(id=id).first()
+from app.db.models import DataframeORM, UnstructuredORM, ValueORM, VariableORM
+from app.db.schemas import Dataframe, DataframeFull, Unstructured, Value, Variable
+from app.db.vectorstore import orm_to_vectorstore, unstructured_orm_to_vectorstore
 
 
 # DataframeORM
@@ -116,3 +109,25 @@ def register_full_dataframe(
                     description=value_in.description,
                 ),
             )
+
+
+# UnstructuredORM
+def get_unstructured_by_id(db: Session, id: int) -> UnstructuredORM | None:
+    return db.query(UnstructuredORM).filter_by(id=id).first()
+
+
+def register_unstructured(db: Session, object_in: Unstructured) -> UnstructuredORM:
+    object_dict = object_in.model_dump()
+    object_dict["registered_at"] = datetime.datetime.utcnow()
+
+    db_object = UnstructuredORM(**object_dict)
+    db.add(db_object)
+    db.commit()
+    db.refresh(db_object)
+
+    logging.info(f"Adding unstructured with id={db_object.id} to vectorstore...")
+    vectorstore_id = unstructured_orm_to_vectorstore(db_object)
+    db_object.vectorstore_id = vectorstore_id
+    db.commit()
+
+    return db_object

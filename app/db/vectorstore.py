@@ -6,6 +6,7 @@ from langchain_core.documents import Document
 
 from app.constants import CHROMA_FOLDER, COHERE_API_KEY, COHERE_EMBEDDING_MODEL
 from app.db import DataframeORM, ValueORM, VariableORM
+from app.db.models import UnstructuredORM
 
 
 def get_vectorstore() -> Chroma:
@@ -25,6 +26,20 @@ def orm_to_vectorstore(orm: DataframeORM | VariableORM | ValueORM) -> str:
     vectorstore = get_vectorstore()
 
     page_content = f"{orm.name}\n{orm.description}"
+    doc = Document(
+        page_content=page_content,
+        metadata={"id": orm.id, "type": type(orm).__name__},
+    )
+
+    res = vectorstore.add_documents([doc])
+    return res[0]
+
+
+def unstructured_orm_to_vectorstore(orm: UnstructuredORM) -> str:
+    """Add a SQL UnstructuredORM object to the vectorstore"""
+    vectorstore = get_vectorstore()
+
+    page_content = f"{orm.name}\n{orm.description}\n{orm.content}"
     doc = Document(
         page_content=page_content,
         metadata={"id": orm.id, "type": type(orm).__name__},
