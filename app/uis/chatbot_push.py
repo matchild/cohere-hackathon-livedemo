@@ -1,20 +1,18 @@
 import streamlit as st
 
 from app.agents.push import AiAgent
-from app.constants import SQL_DATABASE_URL
 
 
 def chat_ui_push() -> None:
+    """Chatbot UI for push chat"""
+
+    if "init_push" not in st.session_state:
+        st.session_state["init_push"] = True
+        st.session_state["messages_push"] = []
+
     st.title("Push Chatbot 🤖")
 
-    if "init_chatbot" not in st.session_state:
-        st.session_state["init_chatbot"] = True
-        st.session_state["messages"] = []
-        st.session_state["conn"] = st.connection(
-            "sqlite", type="sql", url=SQL_DATABASE_URL
-        )
-
-    for message in st.session_state["messages"]:
+    for message in st.session_state["messages_push"]:
         with st.chat_message(message["role"]):
             st.markdown(message["message"])
 
@@ -26,12 +24,12 @@ def chat_ui_push() -> None:
             with st.session_state["conn"].session as db_session:
                 agent = AiAgent(db=db_session)
                 ai_answer = agent.run(
-                    user_query, chat_history=st.session_state["messages"]
+                    user_query, chat_history=st.session_state["messages_push"]
                 )
 
         st.chat_message("assistant").markdown(ai_answer)
 
-        st.session_state["messages"] += [
+        st.session_state["messages_push"] += [
             {"role": "human", "message": user_query},
             {"role": "ai", "message": ai_answer},
         ]
