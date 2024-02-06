@@ -3,18 +3,28 @@ import streamlit as st
 # TODO: exchange with pull agent
 from app.agents.push import AiAgent
 from app.db.services import get_dataframe_by_id
+from connectors.csv_connector import CSVConnector
+from connectors.pdf_connector import PDFConnector
 
 
 def chat_ui_pull() -> None:
     """Chatbot UI for pull chat"""
 
-    _CONTAINER_HEIGHT = 600
+    _CONTAINER_HEIGHT = 400
 
     if "init_pull" not in st.session_state:
         st.session_state["init_pull"] = True
         st.session_state["messages_pull"] = []
 
     st.title("Pull Chatbot 🤖")
+
+    uploaded_file = st.file_uploader("Upload your file", type=["csv", "pdf"])
+    if uploaded_file is not None:
+        if uploaded_file.type == "text/csv":
+            connector = CSVConnector(uploaded_file)
+        elif uploaded_file.type == "application/pdf":
+            connector = PDFConnector(uploaded_file)
+        # TODO: do something with the connector
 
     col1, col2 = st.columns(2)
 
