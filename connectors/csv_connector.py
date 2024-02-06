@@ -13,6 +13,7 @@ class CSVConnector:
 
     def column_names_extractor(self):
         header = next(self.csv_reader)
+
         if not header:
             raise Exception("No header")
         elif not set(list(self.columns_description.keys())) == set(self.column_names):
