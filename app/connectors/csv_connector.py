@@ -30,7 +30,7 @@ class CSVConnector:
                 self.categorical_values_description[cat_value] = data_dict[cat_value]
         self.check_columns()
 
-    def check_columns(self) -> None:
+    def check_columns(self) -> bool:
         if not self.column_names:
             raise Exception("No header")
         elif not set(list(self.columns_description.keys())) == set(self.column_names):
@@ -93,6 +93,10 @@ class CSVConnector:
         return categorical_values
 
     def upload_data(self, db: Session | None) -> None:
+        self.check_columns()
+        if self.db_name is None or self.db_description is None:
+            raise Exception("Cannot upload data to database with missing information")
+
         variables = []
         for col in self.column_names:
             values = []
