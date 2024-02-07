@@ -1,6 +1,6 @@
 import os.path
 
-from connectors.csv_connector import CSVConnector
+from app.connectors.csv_connector import CSVConnector
 
 path = os.path.abspath("biostats.csv")
 return_data = {

@@ -2,9 +2,9 @@ import streamlit as st
 
 # TODO: exchange with pull agent
 from app.agents.push import AiAgent
+from app.connectors.csv_connector import CSVConnector
+from app.connectors.pdf_connector import PDFConnector
 from app.db.services import get_dataframe_by_id
-from connectors.csv_connector import CSVConnector
-from connectors.pdf_connector import PDFConnector
 
 
 def chat_ui_pull() -> None:

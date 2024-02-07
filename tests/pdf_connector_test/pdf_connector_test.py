@@ -1,6 +1,6 @@
 import os.path
 
-from connectors.pdf_connector import PDFConnector
+from app.connectors.pdf_connector import PDFConnector
 
 path = os.path.abspath("bitcoin.pdf")
 name = "Bitcoin"
