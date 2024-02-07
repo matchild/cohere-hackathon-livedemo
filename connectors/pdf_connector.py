@@ -1,5 +1,6 @@
 from pypdf import PdfReader
 
+
 class PDFConnector:
     def __init__(self, file_path):
         self.description = None
@@ -22,17 +23,16 @@ class PDFConnector:
         return self.content
 
     def get_data_info(self):
-        response = {
-            "name": self.name,
-            "description": self.description
-        }
+        response = {"name": self.name, "description": self.description}
         return response
 
     def get_specifications(self):
         specs = {
             "inputs_required": ["name", "file_description"],
-            "inputs_required_prompts": ["Give a short name to the data you just uploaded",
-                                        "Describe the file you just uploaded"],
-            "additional_data": None
+            "inputs_required_prompts": [
+                "Give a short name to the data you just uploaded",
+                "Describe the file you just uploaded",
+            ],
+            "additional_data": None,
         }
         return specs

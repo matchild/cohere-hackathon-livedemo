@@ -37,12 +37,11 @@ register_full_dataframe(
                     ),
                 ],
             ),
-
             VariableFull(
                 name="contract_name",
                 description="Name given to the contract as shown in the finance database",
                 is_categorical=False,
-                values=[]
+                values=[],
             ),
             VariableFull(
                 name="is_active",
@@ -51,16 +50,16 @@ register_full_dataframe(
                 values=[
                     ValueLone(
                         name="Active",
-                        description="The expected end of the contract, calculated as the the date it was signed on plus the expected duration, has not yet been reached"
+                        description="The expected end of the contract, calculated as the the date it was signed on plus the expected duration, has not yet been reached",
                     ),
                     ValueLone(
                         name="Expired",
-                        description="The expected end date of the contact has been reached"
-                    )
-                ]
-            )
-        ]
-    )
+                        description="The expected end date of the contact has been reached",
+                    ),
+                ],
+            ),
+        ],
+    ),
 )
 
 register_full_dataframe(
@@ -73,13 +72,13 @@ register_full_dataframe(
                 name="customer_name",
                 description="Name of the customer",
                 is_categorical=False,
-                values=[]
+                values=[],
             ),
             VariableFull(
                 name="customer_tax_code",
                 description="Tax code of the parent company",
                 is_categorical=False,
-                values=[]
+                values=[],
             ),
             VariableFull(
                 name="location",
@@ -89,22 +88,17 @@ register_full_dataframe(
                     ValueLone(
                         name="EU_West",
                         description="Countries served in Western Europe: Italy, Spain, Portugal",
-
                     ),
                     ValueLone(
                         name="EU_East",
-                        description="Countries served in Eastern Europe: Poland, Netherlands, Finland"
+                        description="Countries served in Eastern Europe: Poland, Netherlands, Finland",
                     ),
-                    ValueLone(
-                        name="US",
-                        description="Any of the states in the US"
-                    )
-                ]
-            )
-        ]
-    )
+                    ValueLone(name="US", description="Any of the states in the US"),
+                ],
+            ),
+        ],
+    ),
 )
 
 
 db.close()
-

@@ -8,7 +8,7 @@ descr = "Bitcoin Paper"
 
 pdfconn = PDFConnector(path)
 
-#print(pdfconn.get_specifications())
+# print(pdfconn.get_specifications())
 pdfconn.save_data(name=name, file_description=descr)
 print(pdfconn.get_data_info())
-#print(pdfconn.get_data_content())
+# print(pdfconn.get_data_content())
