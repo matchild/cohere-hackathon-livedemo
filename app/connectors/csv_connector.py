@@ -21,7 +21,11 @@ class CSVConnector:
         self.content = self.input_df.values.tolist()
         self.categorical_values = self.check_categoricals()
 
-    def save_data(self, data_dict: dict[str, str]) -> None:
+    def save_data(self, data_list: list[dict[str, str]]) -> None:
+        data_dict = {}
+        for chunk in data_list:
+            for key,value in chunk.items():
+                data_dict[key] = value
         self.db_name = data_dict.pop("db_name")
         self.db_description = data_dict.pop("db_description")
         for column in self.column_names:
@@ -29,6 +33,7 @@ class CSVConnector:
             for cat_value in self.categorical_values.get(column, []):
                 self.categorical_values_description[cat_value] = data_dict[cat_value]
         self.check_columns()
+
 
     def check_columns(self) -> bool:
         if not self.column_names:
@@ -62,7 +67,7 @@ class CSVConnector:
                 + "' of the dataset you just uploaded"
             )
             for cat_value in self.categorical_values.get(column_name, []):
-                columns_prompts.append(
+                cat_values_prompts.append(
                     "Describe the meaning of categorical value '"
                     + cat_value
                     + "' for column '"

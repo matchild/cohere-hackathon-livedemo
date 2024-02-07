@@ -24,8 +24,8 @@ csvconn = CSVConnector(path)
 
 specifications = csvconn.get_specifications()
 print(specifications)
-csvconn.save_data(data_dict=return_data)
-print(csvconn.get_data_info())
+#csvconn.save_data(data_dict=return_data)
+#print(csvconn.get_data_info())
 # print(csvconn.get_data_content())
 
-csvconn.upload_data(db=None)
+#csvconn.upload_data(db=None)
