@@ -39,8 +39,8 @@ class PDFConnector:
         specs = {
             "inputs_required": ["file_name", "file_description"],
             "inputs_required_prompts": [
-                "Give a short name to the file you just uploaded",
-                "Describe the file you just uploaded",
+                "Please, provide a short but significant name to the file you just uploaded.",
+                "Provide a detailed description of the usage of the file you just uploaded.",
             ],
         }
         return specs

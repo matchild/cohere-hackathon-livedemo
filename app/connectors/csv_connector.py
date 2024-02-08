@@ -24,7 +24,7 @@ class CSVConnector:
     def save_data(self, data_list: list[dict[str, str]]) -> None:
         data_dict = {}
         for chunk in data_list:
-            for key,value in chunk.items():
+            for key, value in chunk.items():
                 data_dict[key] = value
         self.db_name = data_dict.pop("db_name")
         self.db_description = data_dict.pop("db_description")
@@ -33,7 +33,6 @@ class CSVConnector:
             for cat_value in self.categorical_values.get(column, []):
                 self.categorical_values_description[cat_value] = data_dict[cat_value]
         self.check_columns()
-
 
     def check_columns(self) -> bool:
         if not self.column_names:
@@ -64,7 +63,7 @@ class CSVConnector:
             columns_prompts.append(
                 "Describe the column '"
                 + column_name
-                + "' of the dataset you just uploaded"
+                + "' of the dataset you just uploaded."
             )
             for cat_value in self.categorical_values.get(column_name, []):
                 cat_values_prompts.append(
@@ -72,7 +71,7 @@ class CSVConnector:
                     + cat_value
                     + "' for column '"
                     + column_name
-                    + "' of the dataset you just uploaded"
+                    + "' of the dataset you just uploaded."
                 )
                 cat_values_flat.append(cat_value)
         specs = {
@@ -80,8 +79,8 @@ class CSVConnector:
             + self.column_names
             + cat_values_flat,
             "inputs_required_prompts": [
-                "Give a short name to the data you just uploaded",
-                "Describe the data you just uploaded",
+                "Please, provide a short but significant name to the dataset you just uploaded.",
+                "Provide a detailed description of the usage of the dataset you just uploaded.",
             ]
             + columns_prompts
             + cat_values_prompts,
