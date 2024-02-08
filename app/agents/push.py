@@ -4,15 +4,21 @@ import cohere
 from sqlalchemy.orm import Session
 
 from app.constants import COHERE_API_KEY
-from app.db.models import DataframeORM, ValueORM, VariableORM
-from app.db.services import get_dataframe_by_id, get_value_by_id, get_variable_by_id
+from app.db.models import DataframeORM, UnstructuredORM, ValueORM, VariableORM
+from app.db.services import (
+    get_dataframe_by_id,
+    get_unstructured_by_id,
+    get_value_by_id,
+    get_variable_by_id,
+)
 from app.db.vectorstore import get_vectorstore
 
 
 class AiAgent:
     _NUM_SEARCHED_DOCS = 3
     _available_orms = {
-        orm.__name__: orm for orm in [DataframeORM, VariableORM, ValueORM]
+        orm.__name__: orm
+        for orm in [DataframeORM, VariableORM, ValueORM, UnstructuredORM]
     }
 
     def __init__(self, db: Session) -> None:
@@ -45,6 +51,14 @@ class AiAgent:
                 "variable_description": db_value.variable.description,
                 "value_name": db_value.name,
                 "value_description": db_value.description,
+            }
+
+        elif orm_type == UnstructuredORM.__name__:
+            db_unstructured = get_unstructured_by_id(db=self.db, id=object_id)
+            return {
+                "file_name": db_unstructured.name,
+                "file_description": db_unstructured.description,
+                "file_content": db_unstructured.content,
             }
 
         else:
