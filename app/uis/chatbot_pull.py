@@ -26,6 +26,7 @@ def chat_ui_pull() -> None:
             "inputs_required_prompts": [],
         }
         state["outputs"]: list[dict[str, str]] = []
+        state["output_db"]: list = []
 
     st.title("Pull Chatbot 🤖")
 
@@ -131,7 +132,7 @@ def chat_ui_pull() -> None:
                 state["outputs"].append({state["current_ai_question"]: user_query})
                 state["connector"].save_data(state["outputs"])
                 with st.session_state["conn"].session as db_session:
-                    state["connector"].upload_data(db=db_session)
+                    state["output_db"] = state["connector"].upload_data(db=db_session)
 
                 state["connector"] = None
                 st.session_state["file_uploader_key"] += 1
@@ -149,18 +150,16 @@ def chat_ui_pull() -> None:
         st.header("Database")
 
         container2 = st.container(height=_CONTAINER_HEIGHT)
-        container2.json(state["outputs"])
 
-        # with state["conn"].session as db_session:
-        # db_object = get_dataframe_by_id(db=db_session, id=1)
+        for db_object in state["output_db"]:
+            obj_container = container2.container(border=True)
 
-        # obj_container = container2.container(border=True)
-        # obj_container.write("Registered object:")
-        # obj_container.json(
-        #     {
-        #         "id": db_object.id,
-        #         "name": db_object.name,
-        #         "description": db_object.description,
-        #         "registered_at": db_object.registered_at,
-        #     }
-        # )
+            obj_container.write(f"Registered {type(db_object).__name__[:-4]} object:")
+            obj_container.json(
+                {
+                    "id": db_object.id,
+                    "name": db_object.name,
+                    "description": db_object.description,
+                    "registered_at": db_object.registered_at,
+                }
+            )

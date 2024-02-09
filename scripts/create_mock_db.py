@@ -6,7 +6,7 @@ from app.db.services import register_full_dataframe
 Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 
-register_full_dataframe(
+_ = register_full_dataframe(
     db,
     DataframeFull(
         name="CONTRACTS",
@@ -62,7 +62,7 @@ register_full_dataframe(
     ),
 )
 
-register_full_dataframe(
+_ = register_full_dataframe(
     db,
     DataframeFull(
         name="CUSTOMERS",

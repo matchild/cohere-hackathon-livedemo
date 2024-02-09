@@ -3,7 +3,7 @@ import logging
 from pypdf import PdfReader
 from sqlalchemy.orm import Session
 
-from app.db.schemas import Unstructured
+from app.db.schemas import Unstructured, UnstructuredInDB
 from app.db.services import register_unstructured
 
 
@@ -45,7 +45,7 @@ class PDFConnector:
         }
         return specs
 
-    def upload_data(self, db: Session | None) -> None:
+    def upload_data(self, db: Session | None) -> list[UnstructuredInDB] | None:
         if self.file_name is None or self.file_description is None:
             raise Exception("Cannot upload data to database with missing information")
 
@@ -55,4 +55,5 @@ class PDFConnector:
 
         logging.info(f"Uploading PDF to SQL database: {unstructured}")
         if db is not None:
-            register_unstructured(db, unstructured)
+            db_object = register_unstructured(db, unstructured)
+            return [UnstructuredInDB.model_validate(db_object)]

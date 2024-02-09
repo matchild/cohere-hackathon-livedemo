@@ -4,7 +4,16 @@ import logging
 from sqlalchemy.orm import Session
 
 from app.db.models import DataframeORM, UnstructuredORM, ValueORM, VariableORM
-from app.db.schemas import Dataframe, DataframeFull, Unstructured, Value, Variable
+from app.db.schemas import (
+    Dataframe,
+    DataframeFull,
+    DataframeInDB,
+    Unstructured,
+    Value,
+    ValueInDB,
+    Variable,
+    VariableInDB,
+)
 from app.db.vectorstore import orm_to_vectorstore, unstructured_orm_to_vectorstore
 
 
@@ -78,11 +87,13 @@ def register_value(db: Session, object_in: Value) -> ValueORM:
 def register_full_dataframe(
     db: Session,
     dataframe_in: DataframeFull,
-) -> None:
+) -> list[DataframeInDB | VariableInDB | ValueInDB]:
 
     db_dataframe = register_dataframe(
         db, Dataframe(name=dataframe_in.name, description=dataframe_in.description)
     )
+
+    registered_objects = [DataframeInDB.model_validate(db_dataframe)]
 
     for variable_in in dataframe_in.variables:
         db_variable = register_variable(
@@ -94,6 +105,7 @@ def register_full_dataframe(
                 is_categorical=variable_in.is_categorical,
             ),
         )
+        registered_objects.append(VariableInDB.model_validate(db_variable))
 
         if not variable_in.is_categorical and len(variable_in.values) > 0:
             raise Exception(
@@ -109,6 +121,9 @@ def register_full_dataframe(
                     description=value_in.description,
                 ),
             )
+            registered_objects.append(ValueInDB.model_validate(db_value))
+
+    return registered_objects
 
 
 # UnstructuredORM

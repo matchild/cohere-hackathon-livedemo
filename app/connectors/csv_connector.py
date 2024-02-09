@@ -3,7 +3,14 @@ import logging
 import pandas as pd
 from sqlalchemy.orm import Session
 
-from app.db.schemas import DataframeFull, ValueLone, VariableFull
+from app.db.schemas import (
+    DataframeFull,
+    DataframeInDB,
+    ValueInDB,
+    ValueLone,
+    VariableFull,
+    VariableInDB,
+)
 from app.db.services import register_full_dataframe
 
 
@@ -96,7 +103,9 @@ class CSVConnector:
                 categorical_values[column] = categorical_df[column].unique().tolist()
         return categorical_values
 
-    def upload_data(self, db: Session | None) -> None:
+    def upload_data(
+        self, db: Session | None
+    ) -> list[DataframeInDB | VariableInDB | ValueInDB] | None:
         self.check_columns()
         if self.db_name is None or self.db_description is None:
             raise Exception("Cannot upload data to database with missing information")
@@ -127,4 +136,4 @@ class CSVConnector:
 
         logging.info(f"Uploading CSV to SQL database: {dataframe}")
         if db is not None:
-            register_full_dataframe(db, dataframe)
+            return register_full_dataframe(db, dataframe)
