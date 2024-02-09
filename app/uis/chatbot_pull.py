@@ -28,10 +28,11 @@ def chat_ui_pull() -> None:
         state["outputs"]: list[dict[str, str]] = []
         state["output_db"]: list = []
 
-    st.title("Pull Chatbot 🤖")
+    st.title("Pull Chat 📮")
 
-    reformulate_with_ai_on = st.toggle("Activate reformulate requests with AI")
-    questions_with_ai = st.toggle("Personalized questions with AI")
+    col1, col2 = st.columns(2)
+    reformulate_with_ai_on = col1.toggle("Activate reformulate requests with AI")
+    questions_with_ai = col2.toggle("Personalized questions with AI")
 
     uploaded_file = st.file_uploader(
         "Upload your file", type=["csv", "pdf"], key=state["file_uploader_key"]
