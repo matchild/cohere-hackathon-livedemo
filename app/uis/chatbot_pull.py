@@ -65,11 +65,11 @@ def chat_ui_pull() -> None:
                     {state["inputs"]["inputs_required"][0]: user_query}
                 )
                 state["inputs"]["inputs_required"] = state["inputs"]["inputs_required"][
-                                                     1:
-                                                     ]
+                    1:
+                ]
                 state["inputs"]["inputs_required_prompts"] = state["inputs"][
-                                                                 "inputs_required_prompts"
-                                                             ][1:]
+                    "inputs_required_prompts"
+                ][1:]
                 next_message = state["inputs"]["inputs_required_prompts"][0]
                 state["messages_pull"] += [
                     {"role": "human", "message": user_query},
@@ -86,35 +86,36 @@ def chat_ui_pull() -> None:
                 ]
 
             # file content questions space #
-            elif questions_with_ai and state["ai_questions_left"] == _NUMBER_OF_AI_QUESTIONS:
+            elif (
+                questions_with_ai
+                and state["ai_questions_left"] == _NUMBER_OF_AI_QUESTIONS
+            ):
                 state["outputs"].append(
                     {state["inputs"]["inputs_required"][0]: user_query}
                 )
-                state["current_ai_question"] = PullAgent().run_formulating(chat_history=state["messages_pull"])
+                state["current_ai_question"] = PullAgent().run_formulating(
+                    chat_history=state["messages_pull"]
+                )
                 state["messages_pull"] += [
                     {"role": "human", "message": user_query},
                     {
                         "role": "ai",
-                        "message": (
-                            state["current_ai_question"]
-                        ),
+                        "message": (state["current_ai_question"]),
                     },
                 ]
                 state["ai_questions_left"] -= 1
                 print(state["ai_questions_left"])
 
             elif questions_with_ai and state["ai_questions_left"] > 0:
-                state["outputs"].append(
-                    {state["current_ai_question"]: user_query}
+                state["outputs"].append({state["current_ai_question"]: user_query})
+                state["current_ai_question"] = PullAgent().run_formulating(
+                    chat_history=state["messages_pull"]
                 )
-                state["current_ai_question"] = PullAgent().run_formulating(chat_history=state["messages_pull"])
                 state["messages_pull"] += [
                     {"role": "human", "message": user_query},
                     {
                         "role": "ai",
-                        "message": (
-                            state["current_ai_question"]
-                        ),
+                        "message": (state["current_ai_question"]),
                     },
                 ]
                 state["ai_questions_left"] -= 1
@@ -124,12 +125,10 @@ def chat_ui_pull() -> None:
                     {
                         "role": "ai",
                         "message": "All the useful information has been collected! Thanks for your help! "
-                                   "You can now close this window or upload another file",
+                        "You can now close this window or upload another file",
                     }
                 )
-                state["outputs"].append(
-                    {state["current_ai_question"]: user_query}
-                )
+                state["outputs"].append({state["current_ai_question"]: user_query})
                 state["connector"].save_data(state["outputs"])
                 with st.session_state["conn"].session as db_session:
                     state["connector"].upload_data(db=db_session)
