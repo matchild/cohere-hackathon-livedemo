@@ -86,7 +86,9 @@ class AiAgent:
 
         return retrieved_docs
 
-    def run(self, user_query: str, chat_history: list[dict[str, str]]) -> str:
+    def run(
+        self, user_query: str, chat_history: list[dict[str, str]]
+    ) -> tuple[str, list[dict], list[dict]]:
         logging.info(f"Running push agent with user query: {user_query}")
         co = cohere.Client(COHERE_API_KEY)
 
@@ -101,10 +103,10 @@ class AiAgent:
             response = co.chat(
                 message=user_query, chat_history=chat_history, documents=retrieved_docs
             )
-            response.citations
 
         else:
             # direct LLM response
             response = co.chat(message=user_query, chat_history=chat_history)
+            retrieved_docs = []
 
-        return response.text
+        return (response.text, response.citations, retrieved_docs)
