@@ -100,6 +100,7 @@ class AiAgent:
         if response.search_queries:
             # RAG response
             retrieved_docs = self._retrieve_docs(response.search_queries)
+            print(retrieved_docs)
             response = co.chat(
                 message=user_query, chat_history=chat_history, documents=retrieved_docs
             )

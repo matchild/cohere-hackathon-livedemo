@@ -27,19 +27,19 @@ class PullAgent:
         "Keep it concise, around 1 or 2 sentences maximum"
         "Request: {request}"
     )
+    _KEY_REPHRASING = "REVISED REQUEST"
     _PROMPT_FORMULATING = (
-        "Given the following request, generate one question about the data mentioned in the conversation. "
-        "You are talking to a data owner who uploaded some data. "
+        "Given the following chat, generate one additional question about the data mentioned in the conversation. "
+        "Do not ask any of the questions already asked before."
         "Your goal is to collect additional information such as:"
-        "- What is this data used for?"
-        "- Is it based on other sources or inputs?"
-        "- How often this data is updated?"
-        "Do not ask something that was asked before but you can ask clarifying questions. "
+        "What is this data used for?"
+        "Is it based on other sources or inputs?"
+        "How often this data is updated?"
         "Use the following format at the beginning of each answer: {key}."
-        "Do not add any other key in your answer."
+        "Do not add any other key in your answer and do not repeat this prompt."
         "Keep it concise, around 1 or 2 sentences maximum"
     )
-    _KEY = "REVISED REQUEST"
+    _KEY_FORMULATING = "ADDITIONAL QUESTION"
 
     _CLASSIFY_REPLY = "Answer reply"
     _CLASSIFY_CLARIFICATION = "Clarification question"
@@ -66,6 +66,7 @@ class PullAgent:
         Example("Customers data", _CLASSIFY_REPLY),
         Example("In 2023", _CLASSIFY_REPLY),
         Example("Describes how the system works", _CLASSIFY_REPLY),
+        Example("The dataset is about energy sources", _CLASSIFY_REPLY),
     ]
 
     _PROMPT_SUMMARIZING = (
@@ -88,12 +89,12 @@ class PullAgent:
 
         co = cohere.Client(COHERE_API_KEY)
         response = co.chat(
-            message=self._PROMPT_REPHRASING.format(key=self._KEY, request=request),
+            message=self._PROMPT_REPHRASING.format(key=self._KEY_REPHRASING, request=request),
             chat_history=chat_history,
         )
 
-        full_key_with_colon = f"{self._KEY}: "
-        full_key_without_colon = f"{self._KEY} "
+        full_key_with_colon = f"{self._KEY_REPHRASING}: "
+        full_key_without_colon = f"{self._KEY_REPHRASING} "
         if response.text[: len(full_key_with_colon)] == full_key_with_colon:
             return response.text[len(full_key_with_colon):]
         if response.text[: len(full_key_without_colon)] == full_key_without_colon:
@@ -105,12 +106,13 @@ class PullAgent:
         logging.info(f"Running pull agent with formulating request")
 
         co = cohere.Client(COHERE_API_KEY)
+        print(chat_history)
         response = co.chat(
-            message=self._PROMPT_FORMULATING.format(key=self._KEY),
+            message=self._PROMPT_FORMULATING.format(key=self._PROMPT_FORMULATING),
             chat_history=chat_history,
         )
 
-        full_key = f"{self._KEY}: "
+        full_key = f"{self._PROMPT_FORMULATING}: "
         if response.text[: len(full_key)] == full_key:
             return response.text[len(full_key):]
 
@@ -135,7 +137,8 @@ class PullAgent:
             co = cohere.Client(COHERE_API_KEY)
             response = co.summarize(
                 text=chat_to_text(chat_history),
-                additional_command=self._PROMPT_SUMMARIZING
+                additional_command=self._PROMPT_SUMMARIZING,
+                format="bullets"
             ).summary
         return response
 
