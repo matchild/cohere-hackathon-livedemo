@@ -32,7 +32,7 @@ def chat_ui_pull() -> None:
         state["outputs"]["additional"] = {}
         state["output_db"]: list = {}
 
-    st.title("Pull Chat 📮")
+    st.title("Submission Chat 📮")
 
     col1, col2 = st.columns(2)
     reformulate_with_ai_on = _REFORMULATE_AI
@@ -73,7 +73,8 @@ def chat_ui_pull() -> None:
                             "role": "ai",
                             "message": (
                                 PullAgent().run_rephrasing(
-                                    state["inputs"]["inputs_required_prompts"][0], chat_history=state["messages_pull"]
+                                    state["inputs"]["inputs_required_prompts"][0],
+                                    chat_history=state["messages_pull"],
                                 )
                                 if reformulate_with_ai_on
                                 else state["inputs"]["inputs_required_prompts"][0]
@@ -84,7 +85,9 @@ def chat_ui_pull() -> None:
 
             # file format questions space #
             if len(state["inputs"]["inputs_required_prompts"]) > 1:
-                state["outputs"]["required"][state["inputs"]["inputs_required"][0]] = user_query
+                state["outputs"]["required"][
+                    state["inputs"]["inputs_required"][0]
+                ] = user_query
                 state["inputs"]["inputs_required"] = state["inputs"]["inputs_required"][
                     1:
                 ]
@@ -112,7 +115,9 @@ def chat_ui_pull() -> None:
                 questions_with_ai
                 and state["ai_questions_left"] == _NUMBER_OF_AI_QUESTIONS
             ):
-                state["outputs"]["required"][state["inputs"]["inputs_required"][0]] = user_query
+                state["outputs"]["required"][
+                    state["inputs"]["inputs_required"][0]
+                ] = user_query
                 state["current_ai_question"] = PullAgent().run_formulating(
                     chat_history=state["messages_pull"]
                 )
@@ -127,7 +132,9 @@ def chat_ui_pull() -> None:
                 state["ai_questions_left"] -= 1
 
             elif questions_with_ai and state["ai_questions_left"] > 0:
-                state["outputs"]["additional"][state["current_ai_question"]] = user_query
+                state["outputs"]["additional"][
+                    state["current_ai_question"]
+                ] = user_query
                 with st.spinner("Generating next question..."):
                     state["current_ai_question"] = PullAgent().run_formulating(
                         chat_history=state["messages_pull"]
@@ -149,12 +156,16 @@ def chat_ui_pull() -> None:
                         "You can now close this window or upload another file",
                     }
                 )
-                state["outputs"]["additional"][state["current_ai_question"]] = user_query
+                state["outputs"]["additional"][
+                    state["current_ai_question"]
+                ] = user_query
                 print(state["outputs"])
                 state["connector"].save_data(state["outputs"])
                 with st.session_state["conn"].session as db_session:
                     with st.spinner("Saving data and answers..."):
-                        state["output_db"] = state["connector"].upload_data(db=db_session)
+                        state["output_db"] = state["connector"].upload_data(
+                            db=db_session
+                        )
 
                 state["connector"] = None
                 st.session_state["file_uploader_key"] += 1
