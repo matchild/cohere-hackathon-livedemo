@@ -3,8 +3,10 @@ import logging
 from pypdf import PdfReader
 from sqlalchemy.orm import Session
 
+from app.agents.pull import PullAgent
 from app.db.schemas import Unstructured, UnstructuredInDB
 from app.db.services import register_unstructured
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 class PDFConnector:
@@ -15,9 +17,16 @@ class PDFConnector:
         self.reader = PdfReader(file_path)
         self.content = self.read_content()
 
-    def save_data(self, file_name: str, file_description: str):
-        self.file_name = file_name
-        self.file_description = file_description
+    def save_data(self, data_list: dict[str, dict[str, str]]) -> None:
+        data_required = data_list['required']
+        data_additional = data_list["additional"]
+        self.file_name = data_required['file_name']
+
+        additional_info = ""
+        for (additional_elem_key, additional_elem_value) in data_additional.items():
+            additional_info += f"{additional_elem_key}: {additional_elem_value} /n"
+        additional_info += data_required['file_description']
+        self.file_description = PullAgent().create_description(additional_info)
 
     def read_content(self) -> str:
         text = ""
@@ -49,11 +58,22 @@ class PDFConnector:
         if self.file_name is None or self.file_description is None:
             raise Exception("Cannot upload data to database with missing information")
 
-        unstructured = Unstructured(
-            name=self.file_name, description=self.file_description, content=self.content
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=200,
+            length_function=len,
+            is_separator_regex=False,
         )
+        text_splits = text_splitter.split_text(self.content)
+        return_chunks = []
+        for count, split in enumerate(text_splits):
+            unstructured = Unstructured(
+                name=self.file_name, description=self.file_description, content=split
+            )
 
-        logging.info(f"Uploading PDF to SQL database: {unstructured}")
-        if db is not None:
-            db_object = register_unstructured(db, unstructured)
-            return [UnstructuredInDB.model_validate(db_object)]
+            logging.info(f"Uploading PDF to database: {count}")
+            if db is not None:
+                db_object = register_unstructured(db, unstructured)
+                return_chunks.append(UnstructuredInDB.model_validate(db_object))
+        return return_chunks
+

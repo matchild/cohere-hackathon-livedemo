@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 from sqlalchemy.orm import Session
 
+from app.agents.pull import PullAgent
 from app.db.schemas import (
     DataframeFull,
     DataframeInDB,
@@ -28,18 +29,20 @@ class CSVConnector:
         self.content = self.input_df.values.tolist()
         self.categorical_values = self.check_categoricals()
 
-    def save_data(self, data_list: list[dict[str, str]]) -> None:
-        data_dict = {}
-        for chunk in data_list:
-            for key, value in chunk.items():
-                data_dict[key] = value
-        self.db_name = data_dict.pop("db_name")
-        self.db_description = data_dict.pop("db_description")
+    def save_data(self, data_list: dict[str, dict[str, str]]) -> None:
+        data_required = data_list['required']
+        data_additional = data_list["additional"]
+        self.db_name = data_required.pop("db_name")
         for column in self.column_names:
-            self.columns_description[column] = data_dict[column]
+            self.columns_description[column] = data_required[column]
             for cat_value in self.categorical_values.get(column, []):
-                self.categorical_values_description[cat_value] = data_dict[cat_value]
-        self.check_columns()
+                self.categorical_values_description[cat_value] = data_required[cat_value]
+
+        additional_info = ""
+        for (additional_elem_key, additional_elem_value) in data_additional.items():
+            additional_info += f"{additional_elem_key}: {additional_elem_value} /n"
+        additional_info += data_required['db_description']
+        self.db_description = PullAgent().create_description(additional_info)
 
     def check_columns(self) -> bool:
         if not self.column_names:
