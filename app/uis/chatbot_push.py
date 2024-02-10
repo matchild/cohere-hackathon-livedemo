@@ -10,7 +10,7 @@ def chat_ui_push() -> None:
         st.session_state["init_push"] = True
         st.session_state["messages_push"] = []
 
-    st.title("Push Chat 📬")
+    st.title("Retrieval Chat 📬")
 
     for message in st.session_state["messages_push"]:
         with st.chat_message(message["role"]):
