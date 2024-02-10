@@ -5,7 +5,7 @@ from app.connectors.csv_connector import CSVConnector
 
 logging.basicConfig(level=logging.INFO)
 
-path = os.path.abspath("biostats.csv")
+path = os.path.abspath("table_energy.csv")
 return_data = {
     "db_name": "DB on biostats",
     "db_description": "DB on biostats",
