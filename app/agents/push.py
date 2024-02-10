@@ -101,6 +101,7 @@ class AiAgent:
             response = co.chat(
                 message=user_query, chat_history=chat_history, documents=retrieved_docs
             )
+            response.citations
 
         else:
             # direct LLM response
