@@ -6,6 +6,8 @@ from app.db.services import register_full_dataframe
 Base.metadata.create_all(bind=engine)
 
 db = SessionLocal()
+db.commit()
+
 
 # _ = register_full_dataframe(
 #     db,

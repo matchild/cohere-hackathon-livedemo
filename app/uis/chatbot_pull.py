@@ -80,7 +80,7 @@ def chat_ui_pull() -> None:
                 st.rerun()
 
             # file format questions space #
-            if len(state["inputs"]["inputs_required_prompts"]) > 1:
+            elif len(state["inputs"]["inputs_required_prompts"]) > 1:
                 state["outputs"]["required"][
                     state["inputs"]["inputs_required"][0]
                 ] = user_query
