@@ -4,6 +4,7 @@ from app.db.schemas import DataframeFull, ValueLone, VariableFull
 from app.db.services import register_full_dataframe
 
 Base.metadata.create_all(bind=engine)
+
 db = SessionLocal()
 
 # _ = register_full_dataframe(
