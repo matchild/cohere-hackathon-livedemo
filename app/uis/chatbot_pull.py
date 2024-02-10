@@ -17,6 +17,7 @@ def chat_ui_pull() -> None:
 
     if "init_pull" not in state:
         state["init_pull"]: bool = True
+        state["summary_chat"] = "Answer to more questions to generate the insights..."
         state["messages_pull"]: list[dict[str, str]] = []
         state["connector"]: CSVConnector | PDFConnector | None = None
         state["file_uploader_key"] = 0
@@ -173,10 +174,14 @@ def chat_ui_pull() -> None:
                         "message": "Upload a file to start!",
                     }
                 )
+            with st.spinner("Generating insights..."):
+                result_summary = PullAgent().summarize_chat(state["messages_pull"])
+                if len(result_summary) > 0:
+                    state["summary_chat"] = result_summary
             st.rerun()
 
     with container2:
-        st.markdown(PullAgent().summarize_chat(state["messages_pull"]))
+        st.markdown(state["summary_chat"])
 
         # for db_object in state["output_db"]:
         #     obj_container = container2.container(border=True)
