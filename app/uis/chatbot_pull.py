@@ -3,12 +3,12 @@ import streamlit as st
 from app.agents.pull import PullAgent
 from app.connectors.csv_connector import CSVConnector
 from app.connectors.pdf_connector import PDFConnector
+from app.uis.utils import st_chat_containers
 
 
 def chat_ui_pull() -> None:
     """Chatbot UI for pull chat"""
 
-    _CONTAINER_HEIGHT = 400
     _NUMBER_OF_AI_QUESTIONS = 2
     _REFORMULATE_AI = True
     _QUESTIONS_AI = True
@@ -34,7 +34,6 @@ def chat_ui_pull() -> None:
 
     st.title("Submission Chat 📮")
 
-    col1, col2 = st.columns(2)
     reformulate_with_ai_on = _REFORMULATE_AI
     questions_with_ai = _QUESTIONS_AI
 
@@ -51,19 +50,16 @@ def chat_ui_pull() -> None:
         next_message = state["inputs"]["inputs_required_prompts"][0]
         state["messages_pull"].append({"role": "ai", "message": next_message})
 
-    col1, col2 = st.columns(2)
+    container1, container2, user_query = st_chat_containers(
+        "Chat", "Information submitted"
+    )
 
-    with col1:
-        st.header("Chat")
-
-        container1 = st.container(height=_CONTAINER_HEIGHT)
-
+    with container1:
         for message in state["messages_pull"]:
-            container1.chat_message(message["role"]).markdown(message["message"])
+            st.chat_message(message["role"]).markdown(message["message"])
 
-        user_query = st.chat_input("Give details...")
         if user_query:
-            container1.chat_message("user").markdown(user_query)
+            st.chat_message("user").markdown(user_query)
 
             if not PullAgent().is_run_classifying_ok(user_query):
                 state["messages_pull"].pop(-1)
@@ -179,11 +175,8 @@ def chat_ui_pull() -> None:
                 )
             st.rerun()
 
-    with col2:
-        st.header("Information submitted")
-
-        with st.container(height=_CONTAINER_HEIGHT):
-            st.markdown(PullAgent().summarize_chat(state["messages_pull"]))
+    with container2:
+        st.markdown(PullAgent().summarize_chat(state["messages_pull"]))
 
         # for db_object in state["output_db"]:
         #     obj_container = container2.container(border=True)

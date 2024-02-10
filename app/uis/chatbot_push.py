@@ -1,6 +1,7 @@
 import streamlit as st
 
 from app.agents.push import AiAgent
+from app.uis.utils import st_chat_containers
 
 
 def chat_ui_push() -> None:
@@ -12,24 +13,29 @@ def chat_ui_push() -> None:
 
     st.title("Retrieval Chat 📬")
 
-    for message in st.session_state["messages_push"]:
-        with st.chat_message(message["role"]):
-            st.markdown(message["message"])
+    container1, container2, user_query = st_chat_containers("Chat", "Citations")
 
-    user_query = st.chat_input("Ask something...")
-    if user_query:
-        st.chat_message("user").markdown(user_query)
+    with container1:
+        for message in st.session_state["messages_push"]:
+            with st.chat_message(message["role"]):
+                st.markdown(message["message"])
 
-        with st.spinner("Thinking..."):
-            with st.session_state["conn"].session as db_session:
-                agent = AiAgent(db=db_session)
-                ai_answer = agent.run(
-                    user_query, chat_history=st.session_state["messages_push"]
-                )
+        if user_query:
+            st.chat_message("user").markdown(user_query)
 
-        st.chat_message("assistant").markdown(ai_answer)
+            with st.spinner("Thinking..."):
+                with st.session_state["conn"].session as db_session:
+                    agent = AiAgent(db=db_session)
+                    ai_answer = agent.run(
+                        user_query, chat_history=st.session_state["messages_push"]
+                    )
 
-        st.session_state["messages_push"] += [
-            {"role": "human", "message": user_query},
-            {"role": "ai", "message": ai_answer},
-        ]
+            st.chat_message("assistant").markdown(ai_answer)
+
+            st.session_state["messages_push"] += [
+                {"role": "human", "message": user_query},
+                {"role": "ai", "message": ai_answer},
+            ]
+
+    with container2:
+        st.write("Hello world")
