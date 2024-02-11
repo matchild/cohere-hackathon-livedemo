@@ -1,15 +1,38 @@
 import os
 
+import pinecone
+from langchain.vectorstores import VectorStore
 from langchain_community.embeddings import CohereEmbeddings
 from langchain_community.vectorstores.chroma import Chroma
+from langchain_community.vectorstores.pinecone import Pinecone
 from langchain_core.documents import Document
 
-from app.constants import CHROMA_FOLDER, COHERE_API_KEY, COHERE_EMBEDDING_MODEL
+from app.constants import (
+    CHROMA_FOLDER,
+    COHERE_API_KEY,
+    COHERE_EMBEDDING_MODEL,
+    PINECONE_API_KEY,
+    PINECONE_INDEX,
+    USE_LOCAL_VECTORSTORE,
+)
 from app.db import DataframeORM, ValueORM, VariableORM
 from app.db.models import UnstructuredORM
 
 
-def get_vectorstore() -> Chroma:
+def get_live_vectorstore() -> VectorStore:
+    pc = pinecone.Pinecone(PINECONE_API_KEY)
+    index = pc.Index(PINECONE_INDEX)
+
+    return Pinecone(
+        index=index,
+        embedding=CohereEmbeddings(
+            cohere_api_key=COHERE_API_KEY, model=COHERE_EMBEDDING_MODEL
+        ),
+        text_key="text",
+    )
+
+
+def get_local_vectorstore() -> Chroma:
     if not os.path.exists(CHROMA_FOLDER):
         os.makedirs(CHROMA_FOLDER)
 
@@ -19,6 +42,12 @@ def get_vectorstore() -> Chroma:
             cohere_api_key=COHERE_API_KEY, model=COHERE_EMBEDDING_MODEL
         ),
     )
+
+
+def get_vectorstore() -> VectorStore:
+    if USE_LOCAL_VECTORSTORE:
+        return get_local_vectorstore()
+    return get_live_vectorstore()
 
 
 def orm_to_vectorstore(orm: DataframeORM | VariableORM | ValueORM) -> str:

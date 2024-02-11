@@ -15,4 +15,5 @@ CoDa leverages [Cohere's API](https://docs.cohere.com/docs/the-cohere-platform) 
 * Copy the `.env-example` file into `.env` file and insert your secret keys [never push them on origin]
 
 ## 🏃 How do I get it running?
+* To have a version running fully locally, set `USE_LOCAL_VECTORSTORE = True` inside `app/constants.py`
 * Run the UI: `streamlit run main_ui.py`
