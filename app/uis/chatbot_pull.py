@@ -16,14 +16,14 @@ def chat_ui_pull() -> None:
     _QUESTIONS_AI = True
 
     state = st.session_state
+    st.warning(
+        "Uploading documents to this chat won't store any data into the memory. "
+        "To try Data Submission and Retrieval in a more complete way, "
+        "run the repo locally  ",
+        icon="⚠️",
+    )
 
     if "init_pull" not in state or not state["init_pull"]:
-        st.warning(
-            "Uploading documents to this chat won't store any data into the memory. "
-            "To try Data Submission and Retrieval in a more complete way, "
-            "run the repo locally  ",
-            icon="⚠️",
-        )
         state["init_pull"]: bool = True
         state["summary_chat"] = "Answer to more questions to generate the insights..."
         state["messages_pull"]: list[dict[str, str]] = []
