@@ -4,6 +4,6 @@ chromadb==0.3.29
 langchain==0.1.5
 streamlit==1.31.0
 SQLAlchemy~=2.0.25
-pydantic~=2.6.0
+pydantic
 pypdf~=4.0.1
 pandas~=2.2.0
