@@ -3,7 +3,7 @@ cohere==4.45
 chromadb==0.4.22
 langchain==0.1.5
 streamlit==1.31.0
-sqlite3==3.41.0
+sqlite3==3.41.2
 SQLAlchemy~=2.0.25
 pydantic~=2.6.0
 pypdf~=4.0.1
