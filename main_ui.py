@@ -9,7 +9,11 @@ from app.uis.welcome_page import welcome_ui
 
 logging.basicConfig(level=logging.INFO)
 
-available_uis = {"Welcome Page 👋": welcome_ui, "Data Submission 📮": chat_ui_pull, "Data Retrieval 📬": chat_ui_push}
+available_uis = {
+    "Welcome Page 👋": welcome_ui,
+    "Data Submission 📮": chat_ui_pull,
+    "Data Retrieval 📬": chat_ui_push,
+}
 
 st.set_page_config(
     page_title="CoDA | Cohere Database Assistant", page_icon="🤖", layout="wide"

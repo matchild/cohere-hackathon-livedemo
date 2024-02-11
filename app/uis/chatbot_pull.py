@@ -18,9 +18,12 @@ def chat_ui_pull() -> None:
     state = st.session_state
 
     if "init_pull" not in state or not state["init_pull"]:
-        st.warning("Uploading documents to this chat won't store any data into the memory. "
-                   "To try Data Submission and Retrieval in a more complete way, "
-                   "run the repo locally  ", icon="⚠️")
+        st.warning(
+            "Uploading documents to this chat won't store any data into the memory. "
+            "To try Data Submission and Retrieval in a more complete way, "
+            "run the repo locally  ",
+            icon="⚠️",
+        )
         state["init_pull"]: bool = True
         state["summary_chat"] = "Answer to more questions to generate the insights..."
         state["messages_pull"]: list[dict[str, str]] = []
@@ -91,11 +94,11 @@ def chat_ui_pull() -> None:
                     state["inputs"]["inputs_required"][0]
                 ] = user_query
                 state["inputs"]["inputs_required"] = state["inputs"]["inputs_required"][
-                                                     1:
-                                                     ]
+                    1:
+                ]
                 state["inputs"]["inputs_required_prompts"] = state["inputs"][
-                                                                 "inputs_required_prompts"
-                                                             ][1:]
+                    "inputs_required_prompts"
+                ][1:]
                 next_message = state["inputs"]["inputs_required_prompts"][0]
                 with st.spinner("Generating next question..."):
                     state["messages_pull"] += [
@@ -114,8 +117,8 @@ def chat_ui_pull() -> None:
 
             # file content questions space #
             elif (
-                    questions_with_ai
-                    and state["ai_questions_left"] == _NUMBER_OF_AI_QUESTIONS
+                questions_with_ai
+                and state["ai_questions_left"] == _NUMBER_OF_AI_QUESTIONS
             ):
                 state["outputs"]["required"][
                     state["inputs"]["inputs_required"][0]
@@ -155,7 +158,7 @@ def chat_ui_pull() -> None:
                     {
                         "role": "ai",
                         "message": "All the useful information has been collected! Thanks for your help! "
-                                   "You can now close this window or upload another file",
+                        "You can now close this window or upload another file",
                     }
                 )
                 state["outputs"]["additional"][
@@ -172,7 +175,9 @@ def chat_ui_pull() -> None:
                 state["connector"] = None
                 st.session_state["file_uploader_key"] += 1
 
-                with st.spinner("All the useful information has been collected! I'll refresh the chat in a bit..."):
+                with st.spinner(
+                    "All the useful information has been collected! I'll refresh the chat in a bit..."
+                ):
                     time.sleep(3)
                     state["init_pull"] = False
 

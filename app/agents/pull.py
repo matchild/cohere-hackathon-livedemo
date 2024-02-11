@@ -43,22 +43,32 @@ class PullAgent:
     _CLASSIFY_CLARIFICATION = "Clarification question"
 
     _EXAMPLES_CLASSIFY = [
-        Example("Sure, the sensitivity of data refers to how critical or confidential the information is",
-                _CLASSIFY_REPLY),
+        Example(
+            "Sure, the sensitivity of data refers to how critical or confidential the information is",
+            _CLASSIFY_REPLY,
+        ),
         Example(
             "Could you specify the type of data you're referring to? Are you asking about personal information, "
             "financial records, or something else?",
-            _CLASSIFY_CLARIFICATION),
-        Example("Certainly, the 'Index' column typically serves as a unique identifier for each entry in the dataset",
-                _CLASSIFY_REPLY),
+            _CLASSIFY_CLARIFICATION,
+        ),
+        Example(
+            "Certainly, the 'Index' column typically serves as a unique identifier for each entry in the dataset",
+            _CLASSIFY_REPLY,
+        ),
         Example(
             "Could you specify the specific dataset you're referring to? Is it a sales dataset, a customer database, "
             "or another type of data?",
-            _CLASSIFY_CLARIFICATION),
-        Example("The data represents transaction details such as date, product sold, quantity, and revenue",
-                _CLASSIFY_REPLY),
-        Example("Could you provide more context or specify which dataset you're referring to?",
-                _CLASSIFY_CLARIFICATION),
+            _CLASSIFY_CLARIFICATION,
+        ),
+        Example(
+            "The data represents transaction details such as date, product sold, quantity, and revenue",
+            _CLASSIFY_REPLY,
+        ),
+        Example(
+            "Could you provide more context or specify which dataset you're referring to?",
+            _CLASSIFY_CLARIFICATION,
+        ),
         Example("You can ignore this column, it is not useful", _CLASSIFY_REPLY),
         Example("I don't understand the question", _CLASSIFY_CLARIFICATION),
         Example("Customers data", _CLASSIFY_REPLY),
@@ -81,22 +91,24 @@ class PullAgent:
     )
 
     def run_rephrasing(
-            self, request: str, chat_history: list[dict[str, str]] = []
+        self, request: str, chat_history: list[dict[str, str]] = []
     ) -> str:
         logging.info(f"Running pull agent with rephrasing request: {request}")
 
         co = cohere.Client(COHERE_API_KEY)
         response = co.chat(
-            message=self._PROMPT_REPHRASING.format(key=self._KEY_REPHRASING, request=request),
+            message=self._PROMPT_REPHRASING.format(
+                key=self._KEY_REPHRASING, request=request
+            ),
             chat_history=chat_history,
         )
 
         full_key_with_colon = f"{self._KEY_REPHRASING}: "
         full_key_without_colon = f"{self._KEY_REPHRASING} "
         if response.text[: len(full_key_with_colon)] == full_key_with_colon:
-            return response.text[len(full_key_with_colon):]
+            return response.text[len(full_key_with_colon) :]
         if response.text[: len(full_key_without_colon)] == full_key_without_colon:
-            return response.text[len(full_key_without_colon):]
+            return response.text[len(full_key_without_colon) :]
 
         return response.text
 
@@ -112,18 +124,17 @@ class PullAgent:
 
         full_key = f"{self._PROMPT_FORMULATING}: "
         if response.text[: len(full_key)] == full_key:
-            return response.text[len(full_key):]
+            return response.text[len(full_key) :]
 
         return response.text
 
     def is_run_classifying_ok(self, response: str) -> bool:
         co = cohere.Client(COHERE_API_KEY)
-        response = co.classify(
-            inputs=[response],
-            examples=self._EXAMPLES_CLASSIFY
-        )
+        response = co.classify(inputs=[response], examples=self._EXAMPLES_CLASSIFY)
         response_string = response[0].predictions[0]
-        logging.info(f"Running classifying agent with user response, classified as {response_string}")
+        logging.info(
+            f"Running classifying agent with user response, classified as {response_string}"
+        )
         return True if response_string == self._CLASSIFY_REPLY else False
 
     def summarize_chat(self, chat_history: list[dict[str, str]] = []) -> str:
@@ -136,14 +147,16 @@ class PullAgent:
             response = co.summarize(
                 text=chat_to_text(chat_history),
                 additional_command=self._PROMPT_SUMMARIZING,
-                format="bullets"
+                format="bullets",
             ).summary
         return response
 
     def create_description(self, inputs: str) -> str:
         logging.info(f"Creating unified description based on the questions asked")
         co = cohere.Client(COHERE_API_KEY)
-        response = co.generate(
-            prompt=self._PROMPT_CREATE_DESCRIPTION.format(info=inputs)
-        ).generations[0].text
+        response = (
+            co.generate(prompt=self._PROMPT_CREATE_DESCRIPTION.format(info=inputs))
+            .generations[0]
+            .text
+        )
         return response

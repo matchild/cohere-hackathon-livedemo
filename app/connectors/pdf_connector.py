@@ -1,12 +1,12 @@
 import logging
 
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from pypdf import PdfReader
 from sqlalchemy.orm import Session
 
 from app.agents.pull import PullAgent
 from app.db.schemas import Unstructured, UnstructuredInDB
 from app.db.services import register_unstructured
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 class PDFConnector:
@@ -19,14 +19,14 @@ class PDFConnector:
 
     def save_data(self, data_list: dict[str, dict[str, str]]) -> None:
         print(data_list)
-        data_required = data_list['required']
+        data_required = data_list["required"]
         data_additional = data_list["additional"]
-        self.file_name = data_required['file_name']
+        self.file_name = data_required["file_name"]
 
         additional_info = ""
-        for (additional_elem_key, additional_elem_value) in data_additional.items():
+        for additional_elem_key, additional_elem_value in data_additional.items():
             additional_info += f"{additional_elem_key}: {additional_elem_value} /n"
-        additional_info += data_required['file_description']
+        additional_info += data_required["file_description"]
         self.file_description = PullAgent().create_description(additional_info)
 
     def read_content(self) -> str:
@@ -77,4 +77,3 @@ class PDFConnector:
                 db_object = register_unstructured(db, unstructured)
                 return_chunks.append(UnstructuredInDB.model_validate(db_object))
         return return_chunks
-

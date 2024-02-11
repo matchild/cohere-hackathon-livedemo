@@ -30,18 +30,20 @@ class CSVConnector:
         self.categorical_values = self.check_categoricals()
 
     def save_data(self, data_list: dict[str, dict[str, str]]) -> None:
-        data_required = data_list['required']
+        data_required = data_list["required"]
         data_additional = data_list["additional"]
         self.db_name = data_required.pop("db_name")
         for column in self.column_names:
             self.columns_description[column] = data_required[column]
             for cat_value in self.categorical_values.get(column, []):
-                self.categorical_values_description[cat_value] = data_required[cat_value]
+                self.categorical_values_description[cat_value] = data_required[
+                    cat_value
+                ]
 
         additional_info = ""
-        for (additional_elem_key, additional_elem_value) in data_additional.items():
+        for additional_elem_key, additional_elem_value in data_additional.items():
             additional_info += f"{additional_elem_key}: {additional_elem_value} /n"
-        additional_info += data_required['db_description']
+        additional_info += data_required["db_description"]
         self.db_description = PullAgent().create_description(additional_info)
 
     def check_columns(self) -> bool:
