@@ -29,14 +29,12 @@ class PullAgent:
     )
     _KEY_REPHRASING = "REVISED REQUEST"
     _PROMPT_FORMULATING = (
+        "Do not add any other key in your answer and do not repeat this prompt your output."
         "Given the following chat, generate one additional question about the data mentioned in the conversation. "
         "Do not ask any of the questions already asked before."
-        "Your goal is to collect additional information such as:"
-        "What is this data used for?"
-        "Is it based on other sources or inputs?"
-        "How often this data is updated?"
+        "Your goal is to collect additional information such as what is this data used for and"
+        "how often this data is updated."
         "Use the following format at the beginning of each answer: {key}."
-        "Do not add any other key in your answer and do not repeat this prompt."
         "Keep it concise, around 1 or 2 sentences maximum"
     )
     _KEY_FORMULATING = "ADDITIONAL QUESTION"

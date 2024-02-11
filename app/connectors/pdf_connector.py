@@ -18,6 +18,7 @@ class PDFConnector:
         self.content = self.read_content()
 
     def save_data(self, data_list: dict[str, dict[str, str]]) -> None:
+        print(data_list)
         data_required = data_list['required']
         data_additional = data_list["additional"]
         self.file_name = data_required['file_name']
