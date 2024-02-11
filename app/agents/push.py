@@ -29,28 +29,28 @@ class AiAgent:
         if orm_type == DataframeORM.__name__:
             db_dataframe = get_dataframe_by_id(db=self.db, id=object_id)
             return {
-                "dataframe_name": db_dataframe.name,
-                "dataframe_description": db_dataframe.description,
+                "table": db_dataframe.name,
+                "table_description": db_dataframe.description,
             }
 
         elif orm_type == VariableORM.__name__:
             db_variable = get_variable_by_id(db=self.db, id=object_id)
             return {
-                "dataframe_name": db_variable.dataframe.name,
-                "dataframe_description": db_variable.dataframe.description,
-                "variable_name": db_variable.name,
+                "variable": db_variable.name,
                 "variable_description": db_variable.description,
+                "from_table": db_variable.dataframe.name,
+                "from_table_description": db_variable.dataframe.description,
             }
 
         elif orm_type == ValueORM.__name__:
             db_value = get_value_by_id(db=self.db, id=object_id)
             return {
-                "dataframe_name": db_value.variable.dataframe.name,
-                "dataframe_description": db_value.variable.dataframe.description,
-                "variable_name": db_value.variable.name,
-                "variable_description": db_value.variable.description,
-                "value_name": db_value.name,
+                "value": db_value.name,
                 "value_description": db_value.description,
+                "from_variable": db_value.variable.name,
+                "from_variable_description": db_value.variable.description,
+                "from_table": db_value.variable.dataframe.name,
+                "from_table_description": db_value.variable.dataframe.description,
             }
 
         elif orm_type == UnstructuredORM.__name__:
