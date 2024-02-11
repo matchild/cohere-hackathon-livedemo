@@ -9,7 +9,7 @@ from app.uis.utils import st_chat_containers
 def chat_ui_pull() -> None:
     """Chatbot UI for pull chat"""
 
-    _NUMBER_OF_AI_QUESTIONS = 2
+    _NUMBER_OF_AI_QUESTIONS = 1
     _REFORMULATE_AI = True
     _QUESTIONS_AI = True
 
