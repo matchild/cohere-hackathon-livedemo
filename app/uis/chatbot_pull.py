@@ -67,7 +67,7 @@ def chat_ui_pull() -> None:
         for message in state["messages_pull"]:
             st.chat_message(message["role"]).markdown(message["message"])
 
-        if user_query:
+        if user_query and state["connector"] is not None:
             st.chat_message("user").markdown(user_query)
 
             if not PullAgent().is_run_classifying_ok(user_query):
@@ -181,13 +181,6 @@ def chat_ui_pull() -> None:
                     time.sleep(3)
                     state["init_pull"] = False
 
-            else:
-                state["messages_pull"].append(
-                    {
-                        "role": "ai",
-                        "message": "Upload a file to start!",
-                    }
-                )
             with st.spinner("Generating insights..."):
                 result_summary = PullAgent().summarize_chat(state["messages_pull"])
                 if len(result_summary) > 0:
