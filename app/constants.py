@@ -16,7 +16,7 @@ if not os.path.exists(DATA_FOLDER):
 SQL_DATABASE_URL = f"sqlite:///{DATA_FOLDER}/test.db"
 
 # Vectorstore
-USE_LOCAL_VECTORSTORE = False
+USE_LOCAL_VECTORSTORE = True
 
 # Chroma: local
 CHROMA_FOLDER = f"{DATA_FOLDER}/chroma_db"
