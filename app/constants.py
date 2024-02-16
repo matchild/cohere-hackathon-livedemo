@@ -22,5 +22,6 @@ USE_LOCAL_VECTORSTORE = True
 CHROMA_FOLDER = f"{DATA_FOLDER}/chroma_db"
 
 # Pinecone: live
-PINECONE_API_KEY = os.environ["PINECONE_API_KEY"]
+# PINECONE_API_KEY = os.environ["PINECONE_API_KEY"]
+PINECONE_API_KEY = "NA"
 PINECONE_INDEX = "cohere-hackathon"
