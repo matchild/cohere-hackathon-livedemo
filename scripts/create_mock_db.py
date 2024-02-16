@@ -12,58 +12,83 @@ db.commit()
 _ = register_full_dataframe(
     db,
     DataframeFull(
-        name="CONTRACTS",
-        description="This table contains all the information related to the active contracts the company has with its customers",
+        name="Securities",
+        description="This table contains information about each stock listed in NYSE and was last updated in September 2017 ",
         variables=[
             VariableFull(
-                name="amount",
-                description="Contract amount in dollars",
+                name="Ticker symbol",
+                description="Unique abbreviation used to identify stocks",
                 is_categorical=False,
                 values=[],
             ),
             VariableFull(
-                name="contract_type",
-                description="Type of contract defining the commodity, market segment and branch of the company who issued the contract",
-                is_categorical=True,
-                values=[
-                    ValueLone(
-                        name="2A",
-                        description="It is an energy contract issued by ABC branch for small business segment",
-                    ),
-                    ValueLone(
-                        name="XB",
-                        description="It is a waste contract issued by ABC branch for private homes",
-                    ),
-                    ValueLone(
-                        name="3F",
-                        description="It is a waste contract issued by WXY branch for large companies. These contracts were issued only from 2015 to 2018",
-                    ),
-                ],
-            ),
-            VariableFull(
-                name="contract_name",
-                description="Name given to the contract as shown in the finance database",
+                name="Security",
+                description="Name of the stock",
                 is_categorical=False,
                 values=[],
             ),
             VariableFull(
-                name="is_active",
-                description="Flag that keeps track of whether a contract is active or expired",
+                name="GICS Sector",
+                description="This is the sector the company operates in. GICS stands for Global Industry Classification Standard.",
                 is_categorical=True,
                 values=[
                     ValueLone(
-                        name="Active",
-                        description="The expected end of the contract, calculated as the the date it was signed on plus the expected duration, has not yet been reached",
+                        name="Financials",
+                        description="Sector encompassing banks, insurance companies, and other financial institutions."
                     ),
                     ValueLone(
-                        name="Expired",
-                        description="The expected end date of the contact has been reached",
+                        name="Health Care",
+                        description="Sector focused on providing medical services and promoting wellness."
                     ),
+                    ValueLone(
+                        name="Industrials",
+                        description="Sector encompassing manufacturing, construction, and infrastructure development industries."
+                    ),
+                    ValueLone(
+                        name="Information Technology",
+                        description="Sector involving the development, management, and use of technology for information processing and communication."
+                    ),
+                    ValueLone(
+                        name="Materials",
+                        description="Sector involved in the production and distribution of raw materials and commodities."
+                    ),
+                    ValueLone(
+                        name="Real Estate",
+                        description="Sector involving the buying, selling, and development of properties and land."
+                    ),
+                    ValueLone(
+                        name="Utilities",
+                        description="Sector responsible for providing essential services such as electricity, water, and gas to the public."
+                    )
                 ],
             ),
+            VariableFull(
+                name="Address of Headquarters",
+                description="Physical location of the headquarter, expressed in the format City, State",
+                is_categorical=False,
+                values=[],
+            ),
+            VariableFull(
+                name="Date first added",
+                description="Date the listing was first added to the NYSE",
+                is_categorical=False,
+                values=[],
+            ),
+            VariableFull(
+                name="CIK",
+                description="Central Index Key. This is used to identify the company, person or entity.",
+                is_categorical=False,
+                values=[],
+            )
         ],
     ),
 )
+
+
+
+
+
+
 
 
 

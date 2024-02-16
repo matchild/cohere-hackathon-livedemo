@@ -1,0 +1,14 @@
+
+1. Where can I find the global industry classification standard in the "Securities" table?
+In the Securities data frame, the Global Industry Classification Standard is denoted by the column named 'GICS Sector'.
+
+
+2. What does the column "CIK" contain?
+The column named 'CIK' contains the Central Index Key (CIK) of a company, which serves to identify the company, person or entity.
+
+3. What kind of companies are included in the category "Materials" in the "GICS Sector" column?
+The category "Materials" in the "GICS Sector" column includes companies involved in the production and distribution of raw materials and commodities. For example, this could include businesses involved in mining, forestry, and agriculture.
+
+4. Does the table "Securities" contain information about the location of the headquarter of the stock, if so, in which column?
+In the table "Securities", which was last updated in September 2017, there is a column named "Address of Headquarters", which contains the physical locations of the headquarters of the stocks listed in NYSE. This is expressed in the format City, State. The table also contains information about each stock listed in NYSE through the "Security" column, which includes the name of the stock.
+
